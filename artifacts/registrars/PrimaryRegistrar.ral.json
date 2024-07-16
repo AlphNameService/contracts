@@ -1,0 +1,413 @@
+{
+  "version": "v3.3.0",
+  "name": "PrimaryRegistrar",
+  "bytecode": "06111840c5413941c241ce4209422e4266428b42b442cd42e342f8430d43224336434e010001030109d30c4c375716004f17011601cb17021602020101040c004066d337f56f4b160043170416040f341604134040321a0d7b0c170516051604314c1f1600160516050d2a626c1706160613303116061339331b160613406131160613407a331b1a190d7b16050d2a17054a7fdd1602480e7b1603ce02340d7b16004f17075617081607160800091602a001160300042aa9160816032a1709b1130164160116091602130364170b170a1602d1a21607ce00160a160bc118051600160116021609610101030b004044d3176e47751601480e7b1602ce02340d7bb4170316004f17041604cb17050c0d1605010017060c0d160501021707160316064516031607451b0c7b5617080c0d1605010317091608160931117b160116020004a9160916022a170a160a0d0c16050104061600160a16061607610103030b004052d39fcfd82d16028cb28c2f0d7bb4170316004f17041604cb17050c0d1605010017060c0d160501021707160316064516031607451b0c7b5617080c0d1605010317091608160931117b160116020e0c1605010116000006170a1603160aa50d2f4c091603160a0dbd16030d0c160a010407160016011602160616070c0d1605010374000001010104a00216002c020000020501402416004f17021602cb170316010c0d160301004516010c0d16030102451b0c7b0c0d16030103170456160431117b160216046b4402010001040112d3cf5c7adf16004f17011601cb17020c0d160201031703160116036b44cb02010302050019d30f0b730a1600b400051702b116001406414c50480001130364130064170417031601d1a21602ce01160316040d1601c918010302040011d386f5f1e91600b4000517021602cb1703160116030dbd16010d0c160301040000020500161600cb17021602c54c10160217030c0d16030103170416011604340f7b0c0c16030105010101030009d3f5de33f916004f1701561702160116020009010102020009d3f1ab4760b4a000450c7b16001601a8010001010008d3107e7e39b4a000450c7b1600a100010001010008d3b0e4bf05b4a000450c7b1600a101010001010008d346d34e46b4a000450c7b1600a102010001040008d3c7e7c76db4a000450c7b1600ba01000303000ad3faf4fa3cb4a000450c7b160016011602bb",
+  "codeHash": "e902e51b9792f7dd31ac29903881979182b88ec6b1e6fc2b2961f277ac553c91",
+  "fieldsSig": {
+    "names": [
+      "registrarOwner",
+      "recordTemplateId",
+      "credentialTokenTemplateId",
+      "minRegistrationDuration",
+      "registerCost",
+      "durationCost"
+    ],
+    "types": [
+      "Address",
+      "ByteVec",
+      "ByteVec",
+      "U256",
+      "U256",
+      "U256"
+    ],
+    "isMutable": [
+      true,
+      false,
+      false,
+      false,
+      true,
+      true
+    ]
+  },
+  "eventsSig": [
+    {
+      "name": "NameRegistered",
+      "fieldNames": [
+        "name",
+        "owner",
+        "manager",
+        "ttl"
+      ],
+      "fieldTypes": [
+        "ByteVec",
+        "Address",
+        "Address",
+        "U256"
+      ]
+    },
+    {
+      "name": "NameRenewed",
+      "fieldNames": [
+        "name",
+        "ttl",
+        "owner",
+        "manager"
+      ],
+      "fieldTypes": [
+        "ByteVec",
+        "U256",
+        "Address",
+        "Address"
+      ]
+    },
+    {
+      "name": "NameTransfer",
+      "fieldNames": [
+        "name",
+        "newOwner",
+        "newManager",
+        "oldOwner",
+        "oldManager",
+        "ttl"
+      ],
+      "fieldTypes": [
+        "ByteVec",
+        "Address",
+        "Address",
+        "Address",
+        "Address",
+        "U256"
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "name": "resolveName",
+      "paramNames": [
+        "name"
+      ],
+      "paramTypes": [
+        "ByteVec"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": [
+        "Record"
+      ]
+    },
+    {
+      "name": "register",
+      "paramNames": [
+        "name",
+        "owner",
+        "payer",
+        "duration"
+      ],
+      "paramTypes": [
+        "ByteVec",
+        "Address",
+        "Address",
+        "U256"
+      ],
+      "paramIsMutable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "renew",
+      "paramNames": [
+        "name",
+        "payer",
+        "duration"
+      ],
+      "paramTypes": [
+        "ByteVec",
+        "Address",
+        "U256"
+      ],
+      "paramIsMutable": [
+        false,
+        false,
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "transfer",
+      "paramNames": [
+        "name",
+        "toOwner",
+        "toManager"
+      ],
+      "paramTypes": [
+        "ByteVec",
+        "Address",
+        "Address"
+      ],
+      "paramIsMutable": [
+        false,
+        false,
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "cost",
+      "paramNames": [
+        "duration"
+      ],
+      "paramTypes": [
+        "U256"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": [
+        "U256"
+      ]
+    },
+    {
+      "name": "getCredentialTokenPath",
+      "paramNames": [
+        "name",
+        "caller"
+      ],
+      "paramTypes": [
+        "ByteVec",
+        "Address"
+      ],
+      "paramIsMutable": [
+        false,
+        false
+      ],
+      "returnTypes": [
+        "ByteVec"
+      ]
+    },
+    {
+      "name": "getCredentialTokenId",
+      "paramNames": [
+        "name"
+      ],
+      "paramTypes": [
+        "ByteVec"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": [
+        "ByteVec"
+      ]
+    },
+    {
+      "name": "mintCredentialToken",
+      "paramNames": [
+        "name",
+        "payer"
+      ],
+      "paramTypes": [
+        "ByteVec",
+        "Address"
+      ],
+      "paramIsMutable": [
+        false,
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "burnCredentialToken",
+      "paramNames": [
+        "name",
+        "payer"
+      ],
+      "paramTypes": [
+        "ByteVec",
+        "Address"
+      ],
+      "paramIsMutable": [
+        false,
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "preRegister",
+      "paramNames": [
+        "node",
+        "currentTs"
+      ],
+      "paramTypes": [
+        "ByteVec",
+        "U256"
+      ],
+      "paramIsMutable": [
+        false,
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "purgeExpiredName",
+      "paramNames": [
+        "name"
+      ],
+      "paramTypes": [
+        "ByteVec"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "withdraw",
+      "paramNames": [
+        "to",
+        "amount"
+      ],
+      "paramTypes": [
+        "Address",
+        "U256"
+      ],
+      "paramIsMutable": [
+        false,
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "updateRegistrarOwner",
+      "paramNames": [
+        "newOwner"
+      ],
+      "paramTypes": [
+        "Address"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "updateRegisterCost",
+      "paramNames": [
+        "newRegisterCost"
+      ],
+      "paramTypes": [
+        "U256"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "updateDurationCost",
+      "paramNames": [
+        "newDurationCost"
+      ],
+      "paramTypes": [
+        "U256"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "migrate",
+      "paramNames": [
+        "newCode"
+      ],
+      "paramTypes": [
+        "ByteVec"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "migrateWithFields",
+      "paramNames": [
+        "newCode",
+        "immFieldsEncoded",
+        "mutFieldsEncoded"
+      ],
+      "paramTypes": [
+        "ByteVec",
+        "ByteVec",
+        "ByteVec"
+      ],
+      "paramIsMutable": [
+        false,
+        false,
+        false
+      ],
+      "returnTypes": []
+    }
+  ],
+  "constants": [],
+  "enums": [
+    {
+      "name": "ErrorCodes",
+      "fields": [
+        {
+          "name": "InvalidCaller",
+          "value": {
+            "type": "U256",
+            "value": "0"
+          }
+        },
+        {
+          "name": "InvalidArgs",
+          "value": {
+            "type": "U256",
+            "value": "1"
+          }
+        },
+        {
+          "name": "ExpectAssetAddress",
+          "value": {
+            "type": "U256",
+            "value": "2"
+          }
+        },
+        {
+          "name": "NameHasBeenRegistered",
+          "value": {
+            "type": "U256",
+            "value": "3"
+          }
+        },
+        {
+          "name": "ContractNotExists",
+          "value": {
+            "type": "U256",
+            "value": "4"
+          }
+        },
+        {
+          "name": "NameHasExpired",
+          "value": {
+            "type": "U256",
+            "value": "5"
+          }
+        },
+        {
+          "name": "InvalidCredentialToken",
+          "value": {
+            "type": "U256",
+            "value": "6"
+          }
+        }
+      ]
+    }
+  ]
+}

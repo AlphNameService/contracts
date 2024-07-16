@@ -1,0 +1,207 @@
+{
+  "version": "v3.3.0",
+  "name": "ProfileRegistrar",
+  "bytecode": "02081e40d84160418d41a141b941ce41e3010001010108d3f886ec15140a5f5f6d61705f5f305f5f16004744cbc5020103030a004060d31af404d1b4170316014f1704a0011604cc170516030c0d160501004516030c0d16050102451b0e7b16000c0d160501004516000c0d16050102451b0c7b0c0d160501031706561606320c7b1601160217081707140a5f5f6d61705f5f305f5f16004744cbc54c13160716080d0e0c140a5f5f6d61705f5f305f5f16004744cb1709160901020c0e0c160901024a0b1603d1a2140a5f5f6d61705f5f305f5f16004744b116071608d20102051600160116026001030107004041d3bbbaa037b41701140a5f5f6d61705f5f305f5f16004744cbc50d7b0c0d0d140a5f5f6d61705f5f305f5f16004744cb1706160601010d0d0d160601011703170216024f1704a0011604cc170516010c0d160501004516010c0d16050102451b0c7b16010d0c140a5f5f6d61705f5f305f5f16004744cb01030616001602160360010001020212d3dd5499990c0d0d140a5f5f6d61705f5f305f5f16004744cb1701160101010d0d0d1601010102010001040008d3c7e7c76db4a000450e7b1600ba01000303000ad3faf4fa3cb4a000450e7b160016011602bb010001010008d3107e7e39b4a000450e7b1600a100010001010008d387051c1eb4a000450e7b1600a101",
+  "codeHash": "4e6874a72ead664c0903f77725e9a8e63ce1a3d6ad0dfc3ffdf3aac467eafeee",
+  "fieldsSig": {
+    "names": [
+      "registrarOwner",
+      "primaryRegistrar"
+    ],
+    "types": [
+      "Address",
+      "PrimaryRegistrar"
+    ],
+    "isMutable": [
+      true,
+      true
+    ]
+  },
+  "eventsSig": [
+    {
+      "name": "ProfileSet",
+      "fieldNames": [
+        "owner",
+        "name",
+        "imgUri"
+      ],
+      "fieldTypes": [
+        "Address",
+        "ByteVec",
+        "ByteVec"
+      ]
+    },
+    {
+      "name": "ProfileRemoved",
+      "fieldNames": [
+        "owner",
+        "name",
+        "imgUri"
+      ],
+      "fieldTypes": [
+        "Address",
+        "ByteVec",
+        "ByteVec"
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "name": "profileExists",
+      "paramNames": [
+        "profileOwner"
+      ],
+      "paramTypes": [
+        "Address"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": [
+        "Bool"
+      ]
+    },
+    {
+      "name": "setProfile",
+      "paramNames": [
+        "profileOwner",
+        "name",
+        "imgUri"
+      ],
+      "paramTypes": [
+        "Address",
+        "ByteVec",
+        "ByteVec"
+      ],
+      "paramIsMutable": [
+        false,
+        false,
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "removeProfile",
+      "paramNames": [
+        "profileOwner"
+      ],
+      "paramTypes": [
+        "Address"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "getProfile",
+      "paramNames": [
+        "profileOwner"
+      ],
+      "paramTypes": [
+        "Address"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": [
+        "Profile"
+      ]
+    },
+    {
+      "name": "migrate",
+      "paramNames": [
+        "newCode"
+      ],
+      "paramTypes": [
+        "ByteVec"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "migrateWithFields",
+      "paramNames": [
+        "newCode",
+        "immFieldsEncoded",
+        "mutFieldsEncoded"
+      ],
+      "paramTypes": [
+        "ByteVec",
+        "ByteVec",
+        "ByteVec"
+      ],
+      "paramIsMutable": [
+        false,
+        false,
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "updateRegistrarOwner",
+      "paramNames": [
+        "newOwner"
+      ],
+      "paramTypes": [
+        "Address"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "updatePrimaryRegistrar",
+      "paramNames": [
+        "newRegistrar"
+      ],
+      "paramTypes": [
+        "PrimaryRegistrar"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": []
+    }
+  ],
+  "constants": [],
+  "enums": [
+    {
+      "name": "ErrorCodes",
+      "fields": [
+        {
+          "name": "InvalidNameHolder",
+          "value": {
+            "type": "U256",
+            "value": "0"
+          }
+        },
+        {
+          "name": "InvalidProfileOwner",
+          "value": {
+            "type": "U256",
+            "value": "1"
+          }
+        },
+        {
+          "name": "InvalidCaller",
+          "value": {
+            "type": "U256",
+            "value": "2"
+          }
+        }
+      ]
+    }
+  ],
+  "mapsSig": {
+    "names": [
+      "profiles"
+    ],
+    "types": [
+      "Map[Address,Profile]"
+    ]
+  }
+}

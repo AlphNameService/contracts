@@ -1,0 +1,4 @@
+TxScript WithdrawAlph(registrar: PrimaryRegistrar, amount: U256) {
+  let caller = callerAddress!()
+  registrar.withdraw{caller -> ALPH: tokenRemaining!(caller, ALPH)}(caller, amount)
+}

@@ -1,0 +1,11 @@
+TxScript TransferPrimaryRecord(registrar: PrimaryRegistrar, profileRegistrar: ProfileRegistrar, name: ByteVec, toOwner: Address, toManager: Address) {
+  let caller = callerAddress!()
+  if (caller != toOwner && caller != toManager && profileRegistrar.profileExists(caller)) {
+    let profile = profileRegistrar.getProfile(caller)
+    if (profile.name == name) {
+      profileRegistrar.removeProfile{caller -> ALPH: minimalContractDeposit!()}(caller)
+    }
+  }
+  let credentialTokenId = registrar.getCredentialTokenId(name)
+  registrar.transfer{caller -> credentialTokenId: tokenRemaining!(caller, credentialTokenId)}(name, toOwner, toManager)
+}

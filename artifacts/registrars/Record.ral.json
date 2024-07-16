@@ -1,0 +1,149 @@
+{
+  "version": "v3.3.0",
+  "name": "Record",
+  "bytecode": "04060e4027403540434058406d010000000103d34ffef083a0000201000202000ad3d9113361b3ce00410c7b1600a1001601a102010000000103d3a7a5d453a00202010000000103d377347038a00102010001010008d3151c11c4b3ce00410c7b1600a101010200000009d38e18691cb3ce00410c7bce0077b0",
+  "codeHash": "4dc3a8b556c3ca07d25bb5952faf3cd1cd075eb2b38165d86da9ced47ffed69f",
+  "fieldsSig": {
+    "names": [
+      "registrar",
+      "owner",
+      "ttl",
+      "manager"
+    ],
+    "types": [
+      "ByteVec",
+      "Address",
+      "U256",
+      "Address"
+    ],
+    "isMutable": [
+      false,
+      true,
+      true,
+      true
+    ]
+  },
+  "eventsSig": [],
+  "functions": [
+    {
+      "name": "getOwner",
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": [
+        "Address"
+      ]
+    },
+    {
+      "name": "setOwner",
+      "paramNames": [
+        "newOwner",
+        "newManager"
+      ],
+      "paramTypes": [
+        "Address",
+        "Address"
+      ],
+      "paramIsMutable": [
+        false,
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "getManager",
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": [
+        "Address"
+      ]
+    },
+    {
+      "name": "getTTL",
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": [
+        "U256"
+      ]
+    },
+    {
+      "name": "setTTL",
+      "paramNames": [
+        "newTTL"
+      ],
+      "paramTypes": [
+        "U256"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "destroy",
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": []
+    }
+  ],
+  "constants": [],
+  "enums": [
+    {
+      "name": "ErrorCodes",
+      "fields": [
+        {
+          "name": "InvalidCaller",
+          "value": {
+            "type": "U256",
+            "value": "0"
+          }
+        },
+        {
+          "name": "InvalidArgs",
+          "value": {
+            "type": "U256",
+            "value": "1"
+          }
+        },
+        {
+          "name": "ExpectAssetAddress",
+          "value": {
+            "type": "U256",
+            "value": "2"
+          }
+        },
+        {
+          "name": "NameHasBeenRegistered",
+          "value": {
+            "type": "U256",
+            "value": "3"
+          }
+        },
+        {
+          "name": "ContractNotExists",
+          "value": {
+            "type": "U256",
+            "value": "4"
+          }
+        },
+        {
+          "name": "NameHasExpired",
+          "value": {
+            "type": "U256",
+            "value": "5"
+          }
+        },
+        {
+          "name": "InvalidCredentialToken",
+          "value": {
+            "type": "U256",
+            "value": "6"
+          }
+        }
+      ]
+    }
+  ]
+}

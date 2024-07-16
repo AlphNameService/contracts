@@ -1,0 +1,91 @@
+struct Profile {
+    mut name: ByteVec,
+    mut imgUri: ByteVec
+  }
+
+Contract ProfileRegistrar(
+    mut registrarOwner: Address,
+    mut primaryRegistrar: PrimaryRegistrar
+) {
+    mapping[Address, Profile] profiles
+
+    event ProfileSet(
+        owner: Address,
+        name: ByteVec,
+        imgUri: ByteVec
+    )
+
+    event ProfileRemoved(
+        owner: Address,
+        name: ByteVec,
+        imgUri: ByteVec
+    )
+
+    enum ErrorCodes {
+        InvalidNameHolder = 0
+        InvalidProfileOwner = 1
+        InvalidCaller = 2
+    }
+
+    pub fn profileExists(profileOwner: Address) -> Bool {
+        return profiles.contains!(profileOwner)
+    }
+
+    @using(preapprovedAssets = true)
+    pub fn setProfile(profileOwner: Address, name: ByteVec, imgUri: ByteVec) -> () {
+        let caller = callerAddress!()
+        let node = keccak256!(name)
+        let record = Record(subContractIdOf!(primaryRegistrar, node))
+        checkCaller!(caller == record.getOwner() || caller == record.getManager(), ErrorCodes.InvalidCaller)
+        checkCaller!(profileOwner == record.getOwner() || profileOwner == record.getManager(), ErrorCodes.InvalidNameHolder)
+        let ttl = record.getTTL()
+        assert!(blockTimeStamp!() <= ttl, ErrorCodes.InvalidNameHolder)
+        let profile = Profile { name: name, imgUri: imgUri }
+        if (profiles.contains!(profileOwner)) {
+            profiles[profileOwner] = profile
+        } else {
+            profiles.insert!(caller, profileOwner, profile)
+        }
+        
+        emit ProfileSet(profileOwner, name, imgUri)
+    }
+
+    @using(preapprovedAssets = true)
+    pub fn removeProfile(profileOwner: Address) -> () {
+        let caller = callerAddress!()
+        assert!(profiles.contains!(profileOwner), ErrorCodes.InvalidProfileOwner)
+        let profile = profiles[profileOwner]
+        let node = keccak256!(profile.name)
+        let record = Record(subContractIdOf!(primaryRegistrar, node))
+        checkCaller!(caller == record.getOwner() || caller == record.getManager(), ErrorCodes.InvalidNameHolder)
+        profiles.remove!(caller, profileOwner)
+        emit ProfileRemoved(profileOwner, profile.name, profile.imgUri)
+    }
+
+    pub fn getProfile(profileOwner: Address) -> Profile {
+        return profiles[profileOwner]
+    }
+
+    pub fn migrate(newCode: ByteVec) -> () {
+        checkCaller!(callerAddress!() == registrarOwner, ErrorCodes.InvalidCaller)
+        migrate!(newCode)
+    }
+
+    @using(updateFields = true)
+    pub fn migrateWithFields(newCode: ByteVec, immFieldsEncoded: ByteVec, mutFieldsEncoded: ByteVec) -> () {
+        checkCaller!(callerAddress!() == registrarOwner, ErrorCodes.InvalidCaller)
+        migrateWithFields!(newCode, immFieldsEncoded, mutFieldsEncoded)
+    }
+
+    @using(updateFields = true)
+    pub fn updateRegistrarOwner(newOwner: Address) -> () {
+      checkCaller!(callerAddress!() == registrarOwner, ErrorCodes.InvalidCaller)
+      registrarOwner = newOwner
+    }
+
+    @using(updateFields = true)
+    pub fn updatePrimaryRegistrar(newRegistrar: PrimaryRegistrar) -> () {
+      checkCaller!(callerAddress!() == registrarOwner, ErrorCodes.InvalidCaller)
+      primaryRegistrar = newRegistrar
+    }
+}

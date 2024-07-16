@@ -1,0 +1,28 @@
+{
+  "version": "v3.3.0",
+  "name": "WithdrawAlph",
+  "bytecodeTemplate": "0101030001000cb4170016001600a4a21600{1}0e0c{0}010b",
+  "fieldsSig": {
+    "names": [
+      "registrar",
+      "amount"
+    ],
+    "types": [
+      "PrimaryRegistrar",
+      "U256"
+    ],
+    "isMutable": [
+      false,
+      false
+    ]
+  },
+  "functions": [
+    {
+      "name": "main",
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": []
+    }
+  ]
+}

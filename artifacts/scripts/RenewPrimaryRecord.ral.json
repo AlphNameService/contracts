@@ -1,0 +1,31 @@
+{
+  "version": "v3.3.0",
+  "name": "RenewPrimaryRecord",
+  "bytecodeTemplate": "0101030001000db4170016001600a4a2{1}1600{2}0f0c{0}0102",
+  "fieldsSig": {
+    "names": [
+      "registrar",
+      "name",
+      "duration"
+    ],
+    "types": [
+      "PrimaryRegistrar",
+      "ByteVec",
+      "U256"
+    ],
+    "isMutable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "functions": [
+    {
+      "name": "main",
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": []
+    }
+  ]
+}

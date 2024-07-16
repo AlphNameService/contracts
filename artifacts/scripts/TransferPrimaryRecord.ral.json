@@ -1,0 +1,37 @@
+{
+  "version": "v3.3.0",
+  "name": "TransferPrimaryRecord",
+  "bytecodeTemplate": "0101030004004036b417001600{3}461600{4}461a16000d0d{1}01001a4c1316000d0e{1}0103170217011601{2}414c081600d1a216000d0c{1}0102{2}0d0d{0}010617031600160316001603a5a3{2}{3}{4}0f0c{0}0103",
+  "fieldsSig": {
+    "names": [
+      "registrar",
+      "profileRegistrar",
+      "name",
+      "toOwner",
+      "toManager"
+    ],
+    "types": [
+      "PrimaryRegistrar",
+      "ProfileRegistrar",
+      "ByteVec",
+      "Address",
+      "Address"
+    ],
+    "isMutable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "functions": [
+    {
+      "name": "main",
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": []
+    }
+  ]
+}

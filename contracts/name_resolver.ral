@@ -1,0 +1,3 @@
+Interface INameResolver {  
+    pub fn resolveName(name: ByteVec) -> Record
+  }

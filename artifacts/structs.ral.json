@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Profile",
+    "fieldNames": [
+      "name",
+      "imgUri"
+    ],
+    "fieldTypes": [
+      "ByteVec",
+      "ByteVec"
+    ],
+    "isMutable": [
+      true,
+      true
+    ]
+  }
+]

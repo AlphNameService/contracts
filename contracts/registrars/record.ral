@@ -1,0 +1,37 @@
+Contract Record(
+  registrar: ByteVec,
+  mut owner: Address,
+  mut ttl: U256,
+  mut manager: Address
+) extends Constants() {
+  pub fn getOwner() -> Address {
+    return owner
+  }
+
+  @using(updateFields = true)
+  pub fn setOwner(newOwner: Address, newManager: Address) -> () {
+    checkCaller!(callerContractId!() == registrar, ErrorCodes.InvalidCaller)
+    owner = newOwner
+    manager = newManager
+  }
+
+  pub fn getManager() -> Address {
+    return manager
+  }
+
+  pub fn getTTL() -> U256 {
+    return ttl
+  }
+
+  @using(updateFields = true)
+  pub fn setTTL(newTTL: U256) -> () {
+    checkCaller!(callerContractId!() == registrar, ErrorCodes.InvalidCaller)
+    ttl = newTTL
+  }
+
+  @using(assetsInContract = true)
+  pub fn destroy() -> () {
+    checkCaller!(callerContractId!() == registrar, ErrorCodes.InvalidCaller)
+    destroySelf!(contractIdToAddress!(registrar))
+  }
+}

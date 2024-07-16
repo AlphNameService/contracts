@@ -1,0 +1,14 @@
+Interface Registrar extends INameResolver {
+  event NameRegistered(name: ByteVec, owner: Address, manager: Address, ttl: U256)
+  event NameRenewed(name: ByteVec, ttl: U256, owner: Address, manager: Address)
+  event NameTransfer(name: ByteVec, newOwner: Address, newManager: Address, oldOwner: Address, oldManager: Address, ttl: U256)
+
+  @using(preapprovedAssets = true, checkExternalCaller = false)
+  pub fn register(name: ByteVec, owner: Address, payer: Address, duration: U256) -> ()
+
+  @using(preapprovedAssets = true, checkExternalCaller = false)
+  pub fn renew(name: ByteVec, payer: Address, duration: U256) -> ()
+
+  @using(preapprovedAssets = true)
+  pub fn transfer(name: ByteVec, toOwner: Address, toPayer: Address) -> ()
+}

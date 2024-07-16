@@ -1,0 +1,4 @@
+TxScript SetProfile(registrar: ProfileRegistrar, profileOwner:Address, name: ByteVec, imgUri: ByteVec) {
+    let caller = callerAddress!()
+    registrar.setProfile{caller -> ALPH: minimalContractDeposit!()}(profileOwner, name, imgUri)
+  }

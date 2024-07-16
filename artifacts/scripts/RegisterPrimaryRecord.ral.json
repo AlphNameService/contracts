@@ -1,0 +1,31 @@
+{
+  "version": "v3.3.0",
+  "name": "RegisterPrimaryRecord",
+  "bytecodeTemplate": "0101030001000eb4170016001600a4a2{1}16001600{2}100c{0}0101",
+  "fieldsSig": {
+    "names": [
+      "registrar",
+      "name",
+      "duration"
+    ],
+    "types": [
+      "PrimaryRegistrar",
+      "ByteVec",
+      "U256"
+    ],
+    "isMutable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "functions": [
+    {
+      "name": "main",
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": []
+    }
+  ]
+}

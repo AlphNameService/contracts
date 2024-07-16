@@ -1,0 +1,191 @@
+Contract PrimaryRegistrar(
+  mut registrarOwner: Address,
+  recordTemplateId: ByteVec,
+  credentialTokenTemplateId: ByteVec,
+  minRegistrationDuration: U256,
+  mut registerCost: U256,
+  mut durationCost: U256
+) extends Constants() implements Registrar {
+  fn cost(duration: U256) -> U256 {
+    return durationCost * duration
+  }
+
+  fn getCredentialTokenPath(name: ByteVec, caller: Address) -> ByteVec {
+    let node = keccak256!(name)
+    let record = Record(subContractId!(node))
+    checkCaller!(caller == record.getOwner() || caller == record.getManager(), ErrorCodes.InvalidCaller)
+
+    let ttl = record.getTTL()
+    assert!(blockTimeStamp!() < ttl, ErrorCodes.NameHasExpired)
+    return node ++ u256To32Byte!(ttl)
+  }
+
+  pub fn getCredentialTokenId(name: ByteVec) -> ByteVec {
+    let node = keccak256!(name)
+    let record = Record(subContractId!(node))
+    let ttl = record.getTTL()
+    return subContractId!(node ++ u256To32Byte!(ttl))
+  }
+
+  @using(preapprovedAssets = true)
+  pub fn mintCredentialToken(name: ByteVec, payer: Address) -> () {
+    let path = getCredentialTokenPath(name, callerAddress!())
+    let (tokenImmFields, tokenMutFields) = CredentialToken.encodeFields!(selfContractId!(), name) // TODO: add the ANS prefix
+    let _ = copyCreateSubContractWithToken!{payer -> ALPH: minimalContractDeposit!()}(
+      path,
+      credentialTokenTemplateId,
+      tokenImmFields,
+      tokenMutFields,
+      1,
+      payer
+    )
+  }
+
+  @using(preapprovedAssets = true)
+  pub fn burnCredentialToken(name: ByteVec, payer: Address) -> () {
+    let path = getCredentialTokenPath(name, callerAddress!())
+    let credentialTokenId = subContractId!(path)
+    burnToken!(payer, credentialTokenId, 1)
+    CredentialToken(credentialTokenId).destroy(payer)
+  }
+
+  fn preRegister(node: ByteVec, currentTs: U256) -> () {
+    let recordId = subContractId!(node)
+    if (contractExists!(recordId)) {
+      let record = Record(recordId)
+      let ttl = record.getTTL()
+      assert!(currentTs >= ttl, ErrorCodes.NameHasBeenRegistered)
+      record.destroy()
+    }
+  }
+
+  pub fn resolveName(name: ByteVec) -> Record {
+    let node = keccak256!(name)
+    let record = Record(subContractId!(node))
+    return record
+  }
+
+  @using(preapprovedAssets = true, assetsInContract = enforced, checkExternalCaller = false)
+  pub fn purgeExpiredName(name: ByteVec) -> () {
+    let node = keccak256!(name)
+    let currentTs = blockTimeStamp!()
+    preRegister(node, currentTs)
+  }
+
+  @using(preapprovedAssets = true, assetsInContract = true, checkExternalCaller = false)
+  pub fn register(
+    name: ByteVec,
+    owner: Address,
+    payer: Address,
+    duration: U256
+  ) -> () {
+    let nameSize = size!(name)
+    assert!(nameSize >= 3 && nameSize <= 64, ErrorCodes.InvalidArgs)
+    for (let mut i = 0; i < nameSize; i = i + 1) {
+      let char = u256From1Byte!(byteVecSlice!(name, i, i+1))
+      assert!(!((char < 48 || char > 57) && (char < 97 || char > 122)), ErrorCodes.InvalidArgs) // ensure normalized name 
+    }
+    assert!(isAssetAddress!(payer), ErrorCodes.ExpectAssetAddress)
+    assert!(duration >= minRegistrationDuration, ErrorCodes.InvalidArgs)
+
+    let node = keccak256!(name)
+    let currentTs = blockTimeStamp!()
+    preRegister(node, currentTs)
+
+    transferTokenToSelf!(payer, ALPH, registerCost + cost(duration))
+
+    let ttl = currentTs + duration
+    let (recordImmFields, recordMutFields) = Record.encodeFields!(selfContractId!(), owner, ttl, payer)
+    let _ = copyCreateSubContract!{payer -> ALPH: minimalContractDeposit!()}(
+      node,
+      recordTemplateId,
+      recordImmFields,
+      recordMutFields
+    )
+    emit NameRegistered(name, owner, payer, ttl)
+  }
+
+  @using(preapprovedAssets = true, assetsInContract = true)
+  pub fn renew(name: ByteVec, payer: Address, duration: U256) -> () {
+    assert!(isAssetAddress!(payer), ErrorCodes.ExpectAssetAddress)
+    assert!(duration >= minRegistrationDuration, ErrorCodes.InvalidArgs)
+
+    let caller = callerAddress!()
+    let node = keccak256!(name)
+    let record = Record(subContractId!(node))
+    let owner = record.getOwner()
+    let manager = record.getManager()
+    checkCaller!(caller == owner || caller == manager, ErrorCodes.InvalidCaller)
+
+    let currentTs = blockTimeStamp!()
+    let currentTTL = record.getTTL()
+    assert!(currentTs < currentTTL, ErrorCodes.NameHasExpired)
+
+    transferTokenToSelf!(payer, ALPH, cost(duration))
+
+    let newTTL = currentTTL + duration
+    record.setTTL(newTTL)
+
+    emit NameRenewed(name, newTTL, owner, manager)
+  }
+
+  @using(preapprovedAssets = true)
+  pub fn transfer(name: ByteVec, toOwner: Address, toManager: Address) -> () {
+    assert!(groupOfAddress!(toManager) == groupOfAddress!(selfAddress!()), ErrorCodes.InvalidArgs)
+    let caller = callerAddress!()
+    let node = keccak256!(name)
+    let record = Record(subContractId!(node))
+    let owner = record.getOwner()
+    let manager = record.getManager()
+    checkCaller!(caller == owner || caller == manager, ErrorCodes.InvalidCaller)
+
+    let currentTs = blockTimeStamp!()
+    let currentTTL = record.getTTL()
+    assert!(currentTs < currentTTL, ErrorCodes.NameHasExpired)
+
+    record.setOwner(toOwner, toManager)
+
+    let credentialTokenId = getCredentialTokenId(name)
+    if (tokenRemaining!(caller, credentialTokenId) == 1) {
+      burnToken!(caller, credentialTokenId, 1)
+      CredentialToken(credentialTokenId).destroy(caller)
+    }
+
+    emit NameTransfer(name, toOwner, toManager, owner, manager, record.getTTL())
+  }
+
+  @using(preapprovedAssets = true, assetsInContract = true)
+  pub fn withdraw(to: Address, amount: U256) -> () {
+    checkCaller!(callerAddress!() == registrarOwner, ErrorCodes.InvalidCaller)
+    transferTokenFromSelf!(to, ALPH, amount)
+  }
+
+  @using(updateFields = true)
+  pub fn updateRegistrarOwner(newOwner: Address) -> () {
+    checkCaller!(callerAddress!() == registrarOwner, ErrorCodes.InvalidCaller)
+    registrarOwner = newOwner
+  }
+
+  @using(updateFields = true)
+  pub fn updateRegisterCost(newRegisterCost: U256) -> () {
+    checkCaller!(callerAddress!() == registrarOwner, ErrorCodes.InvalidCaller)
+    registerCost = newRegisterCost
+  }
+
+  @using(updateFields = true)
+  pub fn updateDurationCost(newDurationCost: U256) -> () {
+    checkCaller!(callerAddress!() == registrarOwner, ErrorCodes.InvalidCaller)
+    durationCost = newDurationCost
+  }
+
+  pub fn migrate(newCode: ByteVec) -> () {
+    checkCaller!(callerAddress!() == registrarOwner, ErrorCodes.InvalidCaller)
+    migrate!(newCode)
+  }
+
+  @using(updateFields = true)
+  pub fn migrateWithFields(newCode: ByteVec, immFieldsEncoded: ByteVec, mutFieldsEncoded: ByteVec) -> () {
+    checkCaller!(callerAddress!() == registrarOwner, ErrorCodes.InvalidCaller)
+    migrateWithFields!(newCode, immFieldsEncoded, mutFieldsEncoded)
+  }
+}

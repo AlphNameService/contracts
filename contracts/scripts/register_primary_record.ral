@@ -1,4 +1,28 @@
-TxScript RegisterPrimaryRecord(registrar: PrimaryRegistrar, name: ByteVec, duration: U256) {
-  let owner = callerAddress!()
-  registrar.register{owner -> ALPH: tokenRemaining!(owner, ALPH)}(name, owner, owner, duration)
+TxScript RegisterPrimaryRecord(registrar: PrimaryRegistrar, profileRegistrar: ProfileRegistrar, name: ByteVec, duration: U256) {
+  let caller = callerAddress!()
+  let mut prevOwner = callerAddress!()
+  let mut prevManager = callerAddress!()
+  let node = keccak256!(name)
+  let recordId = subContractIdOf!(registrar, node)
+
+  if (contractExists!(recordId)) {
+    let record = Record(subContractIdOf!(registrar, node))
+    prevOwner = record.getOwner()
+    prevManager = record.getManager()
+  }
+
+  registrar.register{caller -> ALPH: tokenRemaining!(caller, ALPH)}(name, caller, caller, duration)
+
+  if (prevOwner != caller && profileRegistrar.profileExists(prevOwner)) {
+    let ownerProfile = profileRegistrar.getProfile(prevOwner)
+    if (ownerProfile.name == name) {
+      profileRegistrar.removeProfile{caller -> ALPH: minimalContractDeposit!()}(prevOwner)
+    }
+  }
+  if (prevManager != caller && profileRegistrar.profileExists(prevManager)) {
+    let managerProfile = profileRegistrar.getProfile(prevManager)
+    if (managerProfile.name == name) {
+      profileRegistrar.removeProfile{caller -> ALPH: minimalContractDeposit!()}(prevManager)
+    }
+  }
 }

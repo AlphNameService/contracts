@@ -1,19 +1,22 @@
 {
-  "version": "v3.3.0",
+  "version": "v3.4.1",
   "name": "RegisterPrimaryRecord",
-  "bytecodeTemplate": "0101030001000eb4170016001600a4a2{1}16001600{2}100c{0}0101",
+  "bytecodeTemplate": "010103000a004064b41700b41701b41702{2}4f1703{0}1603cc17041604c54c0e{0}1603cc17050c0d1605010017010c0d16050102170216001600a4a2{2}16001600{3}100c{0}0101160116004616010d0d{1}01001a4c1316010d0e{1}0103170717061606{2}414c081600d1a216010d0c{1}0102160216004616020d0d{1}01001a4c1316020d0e{1}0103170917081608{2}414c081600d1a216020d0c{1}0102",
   "fieldsSig": {
     "names": [
       "registrar",
+      "profileRegistrar",
       "name",
       "duration"
     ],
     "types": [
       "PrimaryRegistrar",
+      "ProfileRegistrar",
       "ByteVec",
       "U256"
     ],
     "isMutable": [
+      false,
       false,
       false,
       false

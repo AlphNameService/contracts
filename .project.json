@@ -1,5 +1,5 @@
 {
-  "fullNodeVersion": "v3.3.0",
+  "fullNodeVersion": "v3.4.1",
   "compilerOptionsUsed": {
     "ignoreUnusedConstantsWarnings": true,
     "ignoreUnusedVariablesWarnings": false,
@@ -81,7 +81,7 @@
     },
     "RegisterPrimaryRecord": {
       "sourceFile": "scripts\\register_primary_record.ral",
-      "sourceCodeHash": "b7b04d316cd336d7bc9048a0c59b29789070dd5bc88a1c1dffbdfd188d3685ef",
+      "sourceCodeHash": "d176635bbe18fe6fa5636359d78aa37f48335e9b51731acc97e88cbb38b27221",
       "bytecodeDebugPatch": "",
       "codeHashDebug": "",
       "warnings": []

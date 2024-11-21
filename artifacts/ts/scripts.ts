@@ -33,6 +33,7 @@ export const MintCredentialToken = new ExecutableScript<{
 
 export const RegisterPrimaryRecord = new ExecutableScript<{
   registrar: HexString;
+  profileRegistrar: HexString;
   name: HexString;
   duration: bigint;
 }>(Script.fromJson(RegisterPrimaryRecordScriptJson, "", AllStructs));
